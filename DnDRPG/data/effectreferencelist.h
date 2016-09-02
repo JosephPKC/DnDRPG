@@ -13,4 +13,8 @@
 /* Basic Action EFfects */
 
 /* Item Effects */
+
+/* Basic Healing Potion Effec Template */
+/* Lesser Healing Potion Effect */
+
 #endif // EFFECTREFERENCELIST_H
