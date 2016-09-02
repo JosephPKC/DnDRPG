@@ -20,6 +20,8 @@ namespace constant {
 	static const oid C_DEF_ID = 0;
 	static const string C_DEF_DESC = "";
 
+	static const int C_EFFECT_NUM_SIZE = 100;
+
 	/* DB Constants */
 }
 

@@ -10,7 +10,9 @@ SOURCES += main.cpp \
     src/dbmanager.cpp \
     src/effect.cpp \
     src/cosmicobject.cpp \
-    data/essentials.cpp
+    data/essentials.cpp \
+    src/gamemanager.cpp \
+    src/item.cpp
 
 HEADERS += \
     data/enumerations.h \
@@ -20,4 +22,6 @@ HEADERS += \
     src/effect.h \
     data/essentials.h \
     src/cosmicobject.h \
-    src/resultset.h
+    src/resultset.h \
+    src/gamemanager.h \
+    src/item.h
