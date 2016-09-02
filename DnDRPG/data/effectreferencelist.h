@@ -4,4 +4,13 @@
 
 /* Racial Feature Effects */
 
+/* Class Mechanic Effects */
+
+/* Class Skill Effects */
+
+/* Monster Action Effects */
+
+/* Basic Action EFfects */
+
+/* Item Effects */
 #endif // EFFECTREFERENCELIST_H
