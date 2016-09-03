@@ -11,3 +11,10 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
+
+/* TODO */
+/* Implement the Item Stat Value Scaling Tables
+ * Implement the Upgrade and Update functions for the Gear
+ * Test the Gear classes
+ * Implement Potion Effects
+ */

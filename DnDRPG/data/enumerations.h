@@ -37,6 +37,17 @@ enum class AttrD {
 	BRG
 };
 
+/* Item Stat Bonuses */
+enum class ItemStat {
+
+};
+
+/* Damage Types */
+enum class DamageType {
+	ERR,
+	DEF
+};
+
 /* Item Types */
 enum class ItemType {
 	ERR,

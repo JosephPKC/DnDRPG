@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <cmath>
+#include <cstdlib>
 using namespace std;
 
 typedef size_t oid;
@@ -25,6 +27,12 @@ namespace constant {
 	/* DB Constants */
 }
 
-string toString(size_t i);
+namespace error {
+	//Define Error Codes
+	//For universal error detection, either use a global error flag, or use exceptions
+}
 
+string toString(size_t i); //Uses sstream
+
+int roll(int min, int max, int num = 1); //Uses cmath, cstdlib
 #endif // ESSENTIALS_H
