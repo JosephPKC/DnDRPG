@@ -68,7 +68,7 @@ bool Potion::applyEffect(GameManager* G, Combat* C, oid user, std::vector<oid> t
 }
 
 Gear::Gear() : Item() {
-	setType(ItemType::GEAR);
+	Item::setType(ItemType::GEAR);
 	_level = C_DEF_GEN_INT;
 	_type = GearType::DEF;
 	_rarity = GearRarity::DEF;
@@ -77,7 +77,7 @@ Gear::Gear() : Item() {
 
 Gear::Gear(oid id, string flavor, string name, int value, int level, GearType type, GearRarity rarity, GearSlot slot)
 	: Item(id,flavor,name,ItemType::GEAR,value){
-	_level = level;
+	setLevel(level);
 	_type = type;
 	_rarity = rarity;
 	_slot = slot;
@@ -108,8 +108,8 @@ void Gear::setSlot(const GearSlot& slot) {
 }
 
 void Gear::upgrade() {
-	//The idea of upgrade is that it increments the level of the item by one.
-	//When the item level increases, update all of its stats and properties by following the value scaling guide
+	setLevel(level() + 1);
+	update();
 }
 
 int Gear::level() const {
@@ -117,7 +117,8 @@ int Gear::level() const {
 }
 
 void Gear::setLevel(int level) {
-	_level = level;
+	if (level <= C_MAX_LEVEL && level > 0)
+		_level = level;
 }
 
 std::vector<std::pair<ItemStat, int> > Gear::properties() {
@@ -130,6 +131,10 @@ void Gear::setProperties(const std::vector<std::pair<ItemStat, int> >& propertie
 
 void Gear::update() {
 	//Follow the stat scaling guides
+	for (std::size_t i = 0; i < _properties.size(); ++i) {
+		int base = getBaseValue(_properties[i].second,level() - 1,_properties[i].first);
+		_properties[i].second = getScaledValue(base,level(),_properties[i].first);
+	}
 }
 
 Armor::Armor() : Gear() {
@@ -172,11 +177,16 @@ void Armor::setWeight(const ArmorWeight& weight) {
 }
 
 void Armor::upgrade() {
-
+	setLevel(level() + 1);
+	update();
 }
 
 void Armor::update() {
-
+	int base = getBaseValue(_armor,level() - 1,ItemStat::AC);
+	_armor = getScaledValue(base,level(),ItemStat::AC);
+	base = getBaseValue(_init,level() - 1,ItemStat::INIT);
+	_init = getScaledValue(base,level(),ItemStat::INIT);
+	Gear::update();
 }
 
 OffHand::OffHand() : Gear() {
@@ -199,11 +209,14 @@ void OffHand::setShield(int shield) {
 }
 
 void OffHand::upgrade() {
-
+	setLevel(level() + 1);
+	update();
 }
 
 void OffHand::update() {
-
+	int base = getBaseValue(_shield,level() - 1,ItemStat::AC);
+	_shield = getScaledValue(base,level(),ItemStat::AC);
+	Gear::update();
 }
 
 
@@ -212,22 +225,20 @@ Weapon::Weapon() : Gear() {
 	Gear::setSlot(GearSlot::MAIN);
 	_twoHand = C_DEF_GEN_BOOL;
 	_cl = WeaponClass::DEF;
-	_dmgnum = C_DEF_GEN_INT;
-	_dmgdice = C_DEF_GEN_INT;
-	_dmgbonus = C_DEF_GEN_INT;
+	_dmgmin = C_DEF_GEN_INT;
+	_dmgmax = C_DEF_GEN_INT;
 	_atk = C_DEF_GEN_INT;
 	_ch = C_DEF_GEN_INT;
 	_spatk = C_DEF_GEN_INT;
 	_dmgtype = DamageType::DEF;
 }
 
-Weapon::Weapon(oid id, string flavor, string name, int value, int level, GearRarity rarity, GearSlot slot, bool twoHand, WeaponClass cl, int dmgnum, int dmgdice, int dmgbonus, int atk, int ch, int spatk, DamageType dmgtype)
+Weapon::Weapon(oid id, string flavor, string name, int value, int level, GearRarity rarity, GearSlot slot, bool twoHand, WeaponClass cl, int dmgmin, int dmgmax, int atk, int ch, int spatk, DamageType dmgtype)
 	: Gear(id,flavor,name,value,level,GearType::WEAPON,rarity,slot) {
 	_twoHand = twoHand;
 	_cl = cl;
-	_dmgnum = dmgnum;
-	_dmgdice = dmgdice;
-	_dmgbonus = dmgbonus;
+	_dmgmin = dmgmin;
+	_dmgmax = dmgmax;
 	_atk = atk;
 	_ch = ch;
 	_spatk = spatk;
@@ -235,13 +246,12 @@ Weapon::Weapon(oid id, string flavor, string name, int value, int level, GearRar
 }
 
 void Weapon::upgrade() {
-
+	setLevel(level() + 1);
+	update();
 }
 
 int Weapon::rollDamage() {
-	int min = _dmgnum;
-	int max = _dmgnum * _dmgdice;
-	return roll(min,max) + _dmgbonus;
+	return roll(_dmgmin,_dmgmax);
 }
 
 bool Weapon::twoHand() const {
@@ -258,30 +268,6 @@ WeaponClass Weapon::cl() const {
 
 void Weapon::setCl(const WeaponClass& cl) {
 	_cl = cl;
-}
-
-int Weapon::dmgnum() const {
-	return _dmgnum;
-}
-
-void Weapon::setDmgnum(int dmgnum) {
-	_dmgnum = dmgnum;
-}
-
-int Weapon::dmgdice() const {
-	return _dmgdice;
-}
-
-void Weapon::setDmgdice(int dmgdice) {
-	_dmgdice = dmgdice;
-}
-
-int Weapon::dmgbonus() const {
-	return _dmgbonus;
-}
-
-void Weapon::setDmgbonus(int dmgbonus) {
-	_dmgbonus = dmgbonus;
 }
 
 int Weapon::atk() const {
@@ -316,6 +302,38 @@ void Weapon::setDmgtype(const DamageType& dmgtype) {
 	_dmgtype = dmgtype;
 }
 
+int Weapon::dmgmin() const {
+	return _dmgmin;
+}
+
+void Weapon::setDmgmin(int dmgmin) {
+	_dmgmin = dmgmin;
+}
+
+int Weapon::dmgmax() const {
+	return _dmgmax;
+}
+
+void Weapon::setDmgmax(int dmgmax) {
+	_dmgmax = dmgmax;
+}
+
 void Weapon::update() {
+	int base = getBaseValue(_atk,level() - 1,ItemStat::ATK);
+	_atk = getScaledValue(base,level(),ItemStat::ATK);
+
+	base = getBaseValue(_spatk,level() - 1,ItemStat::SP_ATK);
+	_spatk = getScaledValue(base,level(),ItemStat::SP_ATK);
+
+	base = getBaseValue(_ch,level() - 1,ItemStat::CRIT_HIT);
+	_ch = getScaledValue(base,level(),ItemStat::CRIT_HIT);
+
+	base = getBaseValue(_dmgmin,level() - 1,ItemStat::MIN_DMG);
+	_dmgmin = getScaledValue(base,level(),ItemStat::MIN_DMG);
+
+	base = getBaseValue(_dmgmax,level() - 1,ItemStat::MAX_DMG);
+	_dmgmax = getScaledValue(base,level(),ItemStat::MAX_DMG);
+
+	Gear::update();
 
 }

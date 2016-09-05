@@ -13,8 +13,6 @@ int main(int argc, char *argv[]) {
 }
 
 /* TODO */
-/* Implement the Item Stat Value Scaling Tables
- * Implement the Upgrade and Update functions for the Gear
- * Test the Gear classes
+/*
  * Implement Potion Effects
  */

@@ -9,7 +9,7 @@ Effect::Effect(oid id) : CosmicObject(id,"") {
 
 }
 
-bool Effect::exec(GameManager* G, Combat* C, oid user, std::vector<oid> targets) {
+bool Effect::exec(GameManager* G, Combat* C, oid user, std::vector<oid> targets) const {
 	/* Only checks parameters for general validity */
 	if (C == nullptr) return false;
 	if (G == nullptr) return false;
@@ -20,6 +20,4 @@ bool Effect::exec(GameManager* G, Combat* C, oid user, std::vector<oid> targets)
 	return true;
 }
 
-string Effect::toString() {
-	return "(Effect)" + CosmicObject::toString();
-}
+

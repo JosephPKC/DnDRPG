@@ -18,7 +18,7 @@
 /* Basic Healing Potion Effec Template */
 class R_HEALING_POTION_BASE : public Effect {
 public:
-	R_HEALING_POTION_BASE(oid id = 0, int resnum, int resdice, int resbonus) : Effect(id) {
+	R_HEALING_POTION_BASE(oid id, int resnum, int resdice, int resbonus) : Effect(id) {
 		_resnum = resnum;
 		_resdice = resdice;
 		_resbonus = resbonus;

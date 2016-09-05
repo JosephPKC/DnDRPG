@@ -39,6 +39,26 @@ enum class AttrD {
 
 /* Item Stat Bonuses */
 enum class ItemStat {
+	ERR,
+	DEF,
+	STR,
+	DEX,
+	INT,
+	CON,
+	MIN_DMG,
+	MAX_DMG,
+	ATK,
+	SP_ATK,
+	AC,
+	INIT,
+	CRIT_HIT,
+	CRIT_MIN,
+	HP,
+	BAR,
+	SAVE,
+	THORNS,
+	REG,
+	BAR_REG
 
 };
 

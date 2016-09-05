@@ -8,10 +8,8 @@ class Effect : public CosmicObject {
 public:
 	Effect();
 	Effect(oid id);
-	virtual bool exec(GameManager* G, Combat* C, oid user, std::vector<oid> targets);
-	virtual std::string toString();
+	virtual bool exec(GameManager* G, Combat* C, oid user, std::vector<oid> targets) const;
 
-private:
 
 };
 

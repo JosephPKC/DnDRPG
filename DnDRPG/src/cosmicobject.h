@@ -14,7 +14,6 @@ public:
 	std::string getDescription() const;
 	void setDescription(std::string desc);
 
-	virtual std::string toString();
 
 private:
 	oid _id;

@@ -81,7 +81,8 @@ private:
 	GearSlot _slot;
 	std::vector<std::pair<ItemStat,int>> _properties;
 
-	virtual void update();
+protected:
+	virtual void update(); //Should only be called when needed, i.e. when upgraded
 };
 
 /* Armor Class */
@@ -129,7 +130,7 @@ private:
 class Weapon : public Gear {
 public:
 	Weapon();
-	Weapon(oid id, string flavor, string name, int value, int level, GearRarity rarity, GearSlot slot, bool twoHand, WeaponClass cl, int dmgnum, int dmgdice, int dmgbonus, int atk, int ch, int spatk, DamageType dmgtype);
+	Weapon(oid id, string flavor, string name, int value, int level, GearRarity rarity, GearSlot slot, bool twoHand, WeaponClass cl, int dmgmin, int dmgmax, int atk, int ch, int spatk, DamageType dmgtype);
 
 	void upgrade();
 	int rollDamage();
@@ -139,15 +140,6 @@ public:
 
 	WeaponClass cl() const;
 	void setCl(const WeaponClass& cl);
-
-	int dmgnum() const;
-	void setDmgnum(int dmgnum);
-
-	int dmgdice() const;
-	void setDmgdice(int dmgdice);
-
-	int dmgbonus() const;
-	void setDmgbonus(int dmgbonus);
 
 	int atk() const;
 	void setAtk(int atk);
@@ -161,12 +153,17 @@ public:
 	DamageType dmgtype() const;
 	void setDmgtype(const DamageType& dmgtype);
 
+	int dmgmin() const;
+	void setDmgmin(int dmgmin);
+
+	int dmgmax() const;
+	void setDmgmax(int dmgmax);
+
 private:
 	bool _twoHand;
 	WeaponClass _cl;
-	int _dmgnum;
-	int _dmgdice;
-	int _dmgbonus;
+	int _dmgmin;
+	int _dmgmax;
 	int _atk;
 	int _ch;
 	int _spatk;

@@ -25,7 +25,3 @@ string CosmicObject::getDescription() const {
 void CosmicObject::setDescription(string desc) {
 	_desc = desc;
 }
-
-string CosmicObject::toString() {
-	return _id + ":" + _desc;
-}
