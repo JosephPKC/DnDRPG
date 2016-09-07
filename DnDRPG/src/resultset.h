@@ -33,16 +33,42 @@ struct ItemSet : public ResultSet {
 	}
 };
 
+struct PotionSet : public ItemSet {
+	oid _eid;
+	PotionSet() : ItemSet() {
+		_type = ItemType::POTION;
+		_eid = C_DEF_ID;
+	}
+
+	PotionSet(oid id, string name, int value, oid eid)
+		: ItemSet(id,name,"Potion",value) {
+		_eid = eid;
+	}
+};
+
+struct TreasureSet : public ItemSet {
+	string _flavor;
+	TreasureSet() : ItemSet() {
+		_type = ItemType::TREASURE;
+		_flavor = C_DEF_GEN_STRING;
+	}
+
+	TreasureSet(oid id, string name, int value, string flavor) : ItemSet(id,name,"Treasure",value) {
+		_flavor = flavor;
+	}
+};
+
 struct GearSet : public ItemSet {
 	GearType _type;
 	GearSlot _slot;
 	GearSet() : ItemSet() {
+		ItemSet::_type = ItemType::GEAR;
 		_type = GearType::DEF;
 		_slot = GearSlot::DEF;
 	}
 
-	GearSet(oid id, string name, string type, int value, string gtype, string slot)
-		: ItemSet(id,name,type,value) {
+	GearSet(oid id, string name, int value, string gtype, string slot)
+		: ItemSet(id,name,"Gear",value) {
 		_type = GearTypeRLU.at(gtype);
 		_slot = GearSlotRLU.at(slot);
 	}
@@ -53,13 +79,14 @@ struct ArmorSet : public GearSet {
 	int _armor;
 	int _initiative;
 	ArmorSet() : GearSet() {
+		_type = GearType::ARMOR;
 		_weight = ArmorWeight::DEF;
 		_armor = C_DEF_GEN_INT;
 		_initiative = C_DEF_GEN_INT;
 	}
 
-	ArmorSet(oid id, string name, string type, int value, string gtype, string slot, string weight, int armor, int initiative)
-		: GearSet(id,name,type,value,gtype,slot) {
+	ArmorSet(oid id, string name, int value, string slot, string weight, int armor, int initiative)
+		: GearSet(id,name,value,"Armor",slot) {
 		_weight = ArmorWeightRLU.at(weight);
 		_armor = armor;
 		_initiative = initiative;
@@ -69,11 +96,12 @@ struct ArmorSet : public GearSet {
 struct OffHandSet : public GearSet {
 	int _shield;
 	OffHandSet() : GearSet() {
+		_type = GearType::OFFHAND;
 		_shield = C_DEF_GEN_INT;
 	}
 
-	OffHandSet(oid id, string name, string type, int value, string gtype, string slot, int shield)
-		: GearSet(id,name,type,value,gtype,slot) {
+	OffHandSet(oid id, string name, int value, string slot, int shield)
+		: GearSet(id,name,value,"Off Hand",slot) {
 		_shield = shield;
 	}
 };
@@ -88,6 +116,7 @@ struct WeaponSet : public GearSet {
 	int _chbonus;
 	int _spatkbonus;
 	WeaponSet() : GearSet() {
+		_type = GearType::WEAPON;
 		_hand = C_DEF_GEN_BOOL;
 		_cl = WeaponClass::DEF;
 		_dmgnum = C_DEF_GEN_INT;
@@ -98,8 +127,8 @@ struct WeaponSet : public GearSet {
 		_spatkbonus = C_DEF_GEN_INT;
 	}
 
-	WeaponSet(oid id, string name, string type, int value, string gtype, string slot, int hand, string cl, int dmgnum, int dmgdice, int dmgbonus, int atkbonus, int chbonus, int spatkbonus)
-		:	GearSet(id,name,type,value,gtype,slot) {
+	WeaponSet(oid id, string name, int value, string slot, int hand, string cl, int dmgnum, int dmgdice, int dmgbonus, int atkbonus, int chbonus, int spatkbonus)
+		:	GearSet(id,name,value,"Weapon",slot) {
 		_hand = (hand == 0 ? false : true);
 		_cl = WeaponClassRLU.at(cl);
 		_dmgnum = dmgnum;
@@ -110,5 +139,6 @@ struct WeaponSet : public GearSet {
 		_spatkbonus = spatkbonus;
 	}
 };
+
 
 #endif // RESULTSET_H

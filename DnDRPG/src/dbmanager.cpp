@@ -1,8 +1,9 @@
 #include "dbmanager.h"
 
-DbManager::DbManager(const QString& path) {
+
+DbManager::DbManager(const string& path) {
 	_db = QSqlDatabase::addDatabase("QSQLITE");
-	_db.setDatabaseName(path);
+	_db.setDatabaseName(QString::fromStdString(path));
 
 	if (!_db.open()) {
 		/* Error connecting with database */
@@ -38,8 +39,8 @@ ArmorSet DbManager::queryArmor(oid id) {
 		}
 		as._id = id;
 		as._name = convert(q.value(1).toString());
-		as.ItemSet::_type = ItemTypeRLU.at(convert(q.value(2).toString()));
-		as._type = GearTypeRLU.at(convert(q.value(3).toString()));
+//		as.ItemSet::_type = ItemTypeRLU.at(convert(q.value(2).toString()));
+//		as._type = GearTypeRLU.at(convert(q.value(3).toString()));
 		as._slot = GearSlotRLU.at(convert(q.value(4).toString()));
 		as._weight = ArmorWeightRLU.at(convert(q.value(5).toString()));
 		as._armor = q.value(6).toInt();
@@ -69,13 +70,65 @@ OffHandSet DbManager::queryOffHand(oid id) {
 		}
 		os._id = id;
 		os._name = convert(q.value(1).toString());
-		os.ItemSet::_type = ItemTypeRLU.at(convert(q.value(2).toString()));
-		os._type = GearTypeRLU.at(convert(q.value(3).toString()));
+//		os.ItemSet::_type = ItemTypeRLU.at(convert(q.value(2).toString()));
+//		os._type = GearTypeRLU.at(convert(q.value(3).toString()));
 		os._slot = GearSlotRLU.at(convert(q.value(4).toString()));
 		os._shield = q.value(5).toInt();
 		os._value = q.value(6).toInt();
 	}
 	return os;
+}
+
+PotionSet DbManager::queryPotion(oid id) {
+	QSqlQuery q;
+	string query = "SELECT * FROM PotionView P WHERE P.iid == " + toString(id);
+	if(!q.exec(QString::fromStdString(query))) {
+		qDebug() << "Exec returned false!\n";
+		qDebug() << QString::fromStdString(query);
+	}
+
+	PotionSet ps;
+	if (q.size() > 1) {
+		qDebug() << "More than one row returned!\n";
+	}
+
+	if (q.next()) {
+		if (q.value(0).toInt() != id) {
+			qDebug() << "ID mismatch!\n";
+		}
+		ps._id = id;
+		ps._name = convert(q.value(1).toString());
+//		os.ItemSet::_type = ItemTypeRLU.at(convert(q.value(2).toString()));
+		ps._eid = q.value(3).toInt(); //This might be a problem
+		ps._value = q.value(4).toInt();
+	}
+	return ps;
+}
+
+TreasureSet DbManager::queryTreasure(oid id) {
+	QSqlQuery q;
+	string query = "SELECT * FROM TreasureView T WHERE T.iid == " + toString(id);
+	if(!q.exec(QString::fromStdString(query))) {
+		qDebug() << "Exec returned false!\n";
+		qDebug() << QString::fromStdString(query);
+	}
+
+	TreasureSet ts;
+	if (q.size() > 1) {
+		qDebug() << "More than one row returned!\n";
+	}
+
+	if (q.next()) {
+		if (q.value(0).toInt() != id) {
+			qDebug() << "ID mismatch!\n";
+		}
+		ts._id = id;
+		ts._name = convert(q.value(1).toString());
+//		os.ItemSet::_type = ItemTypeRLU.at(convert(q.value(2).toString()));
+		ts._flavor = convert(q.value(3).toString());
+		ts._value = q.value(4).toInt();
+	}
+	return ts;
 }
 
 WeaponSet DbManager::queryWeapon(oid id) {
@@ -97,8 +150,8 @@ WeaponSet DbManager::queryWeapon(oid id) {
 		}
 		ws._id = id;
 		ws._name = convert(q.value(1).toString());
-		ws.ItemSet::_type = ItemTypeRLU.at(convert(q.value(2).toString()));
-		ws._type = GearTypeRLU.at(convert(q.value(3).toString()));
+//		ws.ItemSet::_type = ItemTypeRLU.at(convert(q.value(2).toString()));
+//		ws._type = GearTypeRLU.at(convert(q.value(3).toString()));
 		ws._slot = GearSlotRLU.at(convert(q.value(4).toString()));
 		ws._cl = WeaponClassRLU.at(convert(q.value(5).toString()));
 		ws._hand = (q.value(6).toInt() == 0 ? false : true);

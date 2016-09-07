@@ -26,7 +26,7 @@ namespace constant {
 	static const int C_EFFECT_NUM_SIZE = 100;
 
 	/* DB Constants */
-
+	static const string C_DB_PATH = "D:\\Files\\Programming\\Home\\C++\\DnDRPG\\DnDRPG\\data\\ref_data.db";
 
 	/* Game Values */
 	static const double C_MIN_DMG_SCALING = 7;

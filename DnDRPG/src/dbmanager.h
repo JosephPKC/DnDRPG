@@ -7,7 +7,8 @@
 /* Needs table specific query functions */
 class DbManager {
 public:
-	DbManager(const QString& path);
+
+	DbManager(const string& path);
 
 	/* Queries on Tables with Tags require manual sorting of Tags into the result vector */
 	ArmorSet queryArmor(oid id);
@@ -17,11 +18,11 @@ public:
 	bool queryObject(oid id);
 	OffHandSet queryOffHand(oid id);
 	bool queryPath(oid id);
-	bool queryPotion(oid id);
+	PotionSet queryPotion(oid id);
 	bool queryRace(oid id);
 	bool querySkill(oid id);
 	bool queryStatus(oid id);
-	bool queryTreasure(oid id);
+	TreasureSet queryTreasure(oid id);
 	WeaponSet queryWeapon(oid id);
 
 
